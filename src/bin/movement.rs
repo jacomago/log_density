@@ -1,6 +1,6 @@
 use std::fs::File;
+use std::path::PathBuf;
 
-use interaction::save_path;
 use log_density::blob::Blob;
 use log_density::renderer::ColorSettings;
 use log_density::{basic_color, lerp_colors, BasicColor, PointParam};
@@ -58,6 +58,19 @@ struct Model {
     texture: wgpu::Texture,
     settings: Settings,
     updated: bool,
+}
+
+pub fn frame_path(app: &App) -> PathBuf {
+    save_path(app)
+        .join(format!("{:03}", app.elapsed_frames()))
+        .with_extension("png")
+}
+
+pub fn save_path(app: &App) -> PathBuf {
+    app.assets_path()
+        .expect("Expected project path")
+        .join("images")
+        .join(app.exe_name().unwrap())
 }
 
 fn key_pressed(app: &App, model: &mut Model, key: Key) {
